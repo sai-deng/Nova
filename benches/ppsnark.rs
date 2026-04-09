@@ -17,7 +17,7 @@ type S = nova_snark::spartan::ppsnark::RelaxedR1CSSNARK<E, EE>;
 // For flamegraphs, run `cargo criterion --bench ppsnark --features flamegraph -- --profile-time <secs>`.
 // The results are located in `target/criterion/profile/<name-of-benchmark>`.
 cfg_if::cfg_if! {
-  if #[cfg(feature = "flamegraph")] {
+  if #[cfg(all(feature = "flamegraph", unix))] {
     criterion_group! {
       name = ppsnark;
       config = Criterion::default().warm_up_time(Duration::from_millis(3000)).with_profiler(pprof2::criterion::PProfProfiler::new(100, pprof2::criterion::Output::Flamegraph(None)));

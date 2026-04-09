@@ -1617,15 +1617,13 @@ mod tests {
   #[ignore]
   #[cfg(feature = "io")]
   fn test_ivc_with_ppot_files() {
-    use std::path::Path;
-
     type E1 = Bn256EngineKZG;
     type E2 = GrumpkinEngine;
 
     let circuit_primary = CubicCircuit::<<E1 as Engine>::Scalar>::default();
 
     // Path to pruned PPOT files - adjust as needed
-    let ptau_dir = Path::new("/tmp/pruned_ptau");
+    let ptau_dir = std::env::temp_dir().join("pruned_ptau");
 
     if !ptau_dir.exists() {
       eprintln!(
@@ -1645,7 +1643,7 @@ mod tests {
       &circuit_primary,
       &*default_ck_hint(),
       &*default_ck_hint(),
-      ptau_dir,
+      &ptau_dir,
     )
     .expect("Failed to setup with PPOT files");
 

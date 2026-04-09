@@ -1387,7 +1387,7 @@ mod tests {
       let point = (0..ell).map(|_| Fr::random(&mut rng)).collect::<Vec<_>>();
       let eval = MultilinearPolynomial::evaluate_with(&poly, &point);
 
-      let mut reader = BufReader::new(std::fs::File::open("/tmp/ppot_0080_13.ptau").unwrap());
+      let mut reader = BufReader::new(std::fs::File::open(std::env::temp_dir().join("ppot_0080_13.ptau")).unwrap());
 
       let ck: CommitmentKey<E> = CommitmentEngine::load_setup(&mut reader, b"test", n).unwrap();
       let (pk, vk) = EvaluationEngine::setup(&ck).unwrap();
@@ -1440,7 +1440,7 @@ mod tests {
     const LABEL: &[u8] = b"test";
 
     let n = 4;
-    let filename = "/tmp/kzg_test.ptau";
+    let filename = std::env::temp_dir().join("kzg_test.ptau");
 
     let ck: CommitmentKey<E> = CommitmentEngine::setup(LABEL, n).unwrap();
 
@@ -1448,13 +1448,13 @@ mod tests {
       .write(true)
       .create(true)
       .truncate(true)
-      .open(filename)
+      .open(&filename)
       .unwrap();
     let mut writer = BufWriter::with_capacity(BUFFER_SIZE, file);
 
     CommitmentEngine::save_setup(&ck, &mut writer).unwrap();
 
-    let file = OpenOptions::new().read(true).open(filename).unwrap();
+    let file = OpenOptions::new().read(true).open(&filename).unwrap();
 
     let mut reader = BufReader::new(file);
 
@@ -1473,8 +1473,8 @@ mod tests {
   #[ignore = "only available with external ptau files"]
   #[test]
   fn test_load_ptau() {
-    let filename = "/tmp/ppot_0080_13.ptau";
-    let file = OpenOptions::new().read(true).open(filename).unwrap();
+    let filename = std::env::temp_dir().join("ppot_0080_13.ptau");
+    let file = OpenOptions::new().read(true).open(&filename).unwrap();
 
     let mut reader = BufReader::new(file);
 

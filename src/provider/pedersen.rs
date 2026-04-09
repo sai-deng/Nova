@@ -543,15 +543,15 @@ mod tests {
 
   #[test]
   fn test_key_save_load() {
-    let path = "/tmp/pedersen_test.keys";
+    let path = std::env::temp_dir().join("pedersen_test.keys");
 
     const LABEL: &[u8; 4] = b"test";
 
     let keys = CommitmentEngine::<E>::setup(LABEL, 100).unwrap();
 
-    CommitmentEngine::save_setup(&keys, &mut BufWriter::new(File::create(path).unwrap())).unwrap();
+    CommitmentEngine::save_setup(&keys, &mut BufWriter::new(File::create(&path).unwrap())).unwrap();
 
-    let keys_read = CommitmentEngine::load_setup(&mut File::open(path).unwrap(), LABEL, 100);
+    let keys_read = CommitmentEngine::load_setup(&mut File::open(&path).unwrap(), LABEL, 100);
 
     assert!(keys_read.is_ok());
     let keys_read: CommitmentKey<E> = keys_read.unwrap();
