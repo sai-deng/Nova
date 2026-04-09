@@ -11,6 +11,9 @@
 #![forbid(unsafe_code)]
 #![cfg_attr(not(test), warn(clippy::print_stdout, clippy::print_stderr))]
 
+#[cfg(all(feature = "flamegraph", not(unix)))]
+compile_error!("The `flamegraph` feature requires a Unix-based OS (pprof2 is not available on Windows)");
+
 // main APIs exposed by this library
 pub mod nova;
 
